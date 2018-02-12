@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web;
+using Xunit;
 
 namespace Snippets
 {
@@ -16,5 +17,16 @@ namespace Snippets
 
             return ub.Uri;
         }
+
+        [Fact]
+        public static void Test()
+        {
+            var url = new Uri("http://localhost/rest/something/browse")
+                .AddQuery("page", "0")
+                .AddQuery("pageSize", "200").ToString();
+            Assert.Equal("http://localhost/rest/something/browse?page=0&pageSize=200", url);
+        }
     }
+
+
 }
