@@ -42,7 +42,8 @@ namespace Snippets
 				e.Parameters = e.Parameters.Union(new[]
 				{
 				new ResolvedParameter(
-					(info, context) => info.ParameterType.GetGenericTypeDefinition() == typeof(ISetting<>),
+					(info, context) => 
+						info.ParameterType.IsGenericType && info.ParameterType.GetGenericTypeDefinition() == typeof(ISetting<>),
 					(parameterInfo, context) =>
 						context.ResolveNamed(parameterInfo.Name.ToLower(), parameterInfo.ParameterType))
 			});
@@ -64,15 +65,22 @@ namespace Snippets
 			}
 		}
 
+		class NonGenericDependency
+		{
+
+		}
 		class Consumer
 		{
 			private readonly ISetting<IPAddress> _ipAddressSetting;
 			private readonly ISetting<string> _nameSetting;
+			private readonly NonGenericDependency _dep;
 
-			public Consumer(ISetting<IPAddress> ipAddressSetting, ISetting<string> name2)
+			public Consumer(ISetting<IPAddress> ipAddressSetting, 
+				ISetting<string> name2, NonGenericDependency dep)
 			{
 				_ipAddressSetting = ipAddressSetting;
 				_nameSetting = name2;
+				_dep = dep;
 			}
 
 			public void Print()
